@@ -1,0 +1,215 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@*Viendo el WebApi*@
+<button id="btnGetCategories">GetCategories</button>
+<button id="btnGetCategory">GetCategory</button>
+<button id="btnAddCategory">AddCategory</button>
+<button id="btnUpdateCategory">UpdateCategory</button>
+<button id="btnDeleteCategory">DeleteCategory</button><br/>
+<input id="textIdCateg" type="text" placeholder="Category ID"/>
+<input id="textDescription" type="text" placeholder="Category Description" /><br/>
+<div id="textLabel">Result</div>
+
+
+<br/><br/>
+@*Viendo el loading*@
+<div id="loading" style="display: none; position: absolute; top: 50%; left: 50%; padding: 2px;">
+    <img src="~/Photo/images.png" />
+</div>
+@*Viendo la funcion AJAX*@
+@using (Html.BeginForm())
+{
+  @Html.TextBox("txt", 0)
+    <button id="btn">Calcular</button><br/>
+    <div id="label">Label</div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        @*Viendo el WebApi*@
+        $(document).ready(function () {
+            $('#btnGetCategories').click(function() {
+                $.ajax({
+                        type: 'GET',
+                        url: '/api/CategoriesAPI',
+                        data: '',
+                        datatype: 'json',
+                        cache: false
+                    })
+                    .success(function(data) {
+                        var outPut = "";
+                        for (var i = 0; i < data.length; i++) {
+                            outPut += '</hr></br>';
+                            outPut += '<b>Category: </b>' + data[i].CategoryId + '</br>';
+                            outPut += '<b>Description: </b>' + data[i].Description + '</br>';
+                        }
+                        $('#textLabel').html(outPut);
+
+                    })
+                    .error(function (xhr, ajaxOptions, thrownError) {
+                        $('#textLabel').html('Error');
+                    });
+            });
+            $('#btnGetCategory').click(function () {
+                var parameter = $("#textIdCateg").val();
+                if (parameter == null) {
+                    $('#textLabel').html('You must enter Category Id');
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/CategoriesAPI/' + $("#textIdCateg").val(),
+                    data: '',
+                    datatype: 'json',
+                    cache: false
+                })
+                    .success(function (data) {
+                        if (data == null) {
+                            $('#textLabel').html('Not records found');
+                        } else {
+                            var outPut = "";
+                            outPut += '</hr></br>';
+                            outPut += '<b>Category: </b>' + data.CategoryId + '</br>';
+                            outPut += '<b>Description: </b>' + data.Description + '</br>';
+                            $('#textLabel').html(outPut);
+                        }
+                        
+
+                    })
+                    .error(function (xhr, ajaxOptions, thrownError) {
+                        $('#textLabel').html('Error');
+                    });
+            });
+            $('#btnAddCategory').click(function () {
+                //var parameter = $("#textIdCateg").val();
+                var parameterDes = $("#textDescription").val();
+                /*if (parameter == null) {
+                    $('#textLabel').html('You must enter Category Iid');
+                    return false;
+                }*/
+                if (parameterDes == "") {
+                    $('#textLabel').html('You must enter Category Descrition');
+                    return false;
+                }
+
+                var category = { Description: parameterDes };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/CategoriesAPI',
+                    data: category,
+                    datatype: 'json',
+                    cache: false
+                })
+                    .success(function (data) {
+                            var outPut = '';
+                            outPut += '</hr>Record Adder</br>';
+                            outPut += '<b>Category: </b>' + data.CategoryId + '</br>';
+                            outPut += '<b>Description: </b>' + data.Description + '</br>';
+                            $('#textLabel').html(outPut);
+                    })
+                    .error(function (xhr, ajaxOptions, thrownError) {
+                        $('#textLabel').html('Error');
+                    });
+                return false;
+            });
+            $('#btnUpdateCategory').click(function () {
+                var parameter = $("#textIdCateg").val();
+                var parameterDes = $("#textDescription").val();
+                if (parameter == null) {
+                    $('#textLabel').html('You must enter Category Iid');
+                    return false;
+                }
+                if (parameterDes == "") {
+                    $('#textLabel').html('You must enter Category Descrition');
+                    return false;
+                }
+
+                var category = {
+                    CategoryId: parameter,
+                    Description: parameterDes
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/CategoriesAPI/' + parameter,
+                    data: category,
+                    datatype: 'json',
+                    cache: false
+                })
+                    .success(function (data) {
+                        var outPut = '';
+                        outPut += 'Record Update';
+                        $('#textLabel').html(outPut);
+                    })
+                    .error(function (xhr, ajaxOptions, thrownError) {
+                        $('#textLabel').html('Error');
+                    });
+                return false;
+            });
+            $('#btnDeleteCategory').click(function () {
+                var parameter = $("#textIdCateg").val();
+                if (parameter == null) {
+                    $('#textLabel').html('You must enter Category Iid');
+                    return false;
+                }
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/api/CategoriesAPI/'+parameter,
+                    data: '',
+                    datatype: 'json',
+                    cache: false
+                })
+                    .success(function (data) {
+                        var outPut = '';
+                        outPut += '</hr>Record Deleted</br>';
+                        outPut += '<b>Category: </b>' + data.CategoryId + '</br>';
+                        outPut += '<b>Description: </b>' + data.Description + '</br>';
+                        $('#textLabel').html(outPut);
+                    })
+                    .error(function (xhr, ajaxOptions, thrownError) {
+                        $('#textLabel').html('Error');
+                    });
+                return false;
+            });
+        });
+        @*Viendo el loading*@
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#loading").css("display", "block");
+            });
+            $(document).ajaxComplete(function () {
+                $("#loading").css("display", "none");
+            });
+            $("button").click(function () {
+                //$("#txt").load("~/Photo/Instalar Angular2.txt");
+            });
+        });
+        @*Viendo la funcion AJAX*@
+        $(document).ready(function() {
+            $("#btn").click(function() {
+                $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("JsonFunct")',
+                        data: { 'n': $('#txt').val() },
+                        datatype: 'json',
+                        cache: false
+                    })
+                    .success(function(ata) {
+                        $("#label").html(ata);
+                    })
+                    .error(function(xhr,ajaxOptions,thrownError) {
+                        $("#label").html("Error en el cont");
+                    });
+                return false;
+            });
+        });
+
+    </script>
+}

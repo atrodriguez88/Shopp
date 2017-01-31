@@ -1,0 +1,62 @@
+﻿@model BestChicken.ViewModels.OrderView
+@{
+    ViewBag.Title = "New Order";
+}
+
+<h2>New Order</h2>
+<h3 @ViewBag.Error></h3>
+<h3 @ViewBag.Add></h3>
+
+@using (Html.BeginForm("NewOrder","Orders",FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        @Html.LabelFor(model => model.Costumer.CostumerId, "Costumer Id", htmlAttributes: new {@class = "control-label col-md-2"})
+        <div class="col-md-10">
+            @Html.DropDownList("CostumerId", null, htmlAttributes: new {@class = "form-control"})
+            @Html.ValidationMessageFor(model => model.Costumer.CostumerId, "", new {@class = "text-danger"})
+        </div>
+    </div>
+    @Html.ActionLink("Add Product", "AddProduct", new { },new {@class="btn btn-primary"})
+    <input type="submit" value="Save Order" class="btn btn-default" />
+}
+<h2>Orden Detail</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Products.Count)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.Precio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.Description)
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Products)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Valor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.ProductId}) |
+                @Html.ActionLink("Delete", "Delete", new {id = item.ProductId})
+            </td>
+        </tr>
+    }
+
+</table>

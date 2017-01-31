@@ -1,0 +1,23 @@
+Cuando este en la carpeta del Proyecto---$valor = (condicion1) ? 1 : ((condicion2) ? 2 : 3);
+
+npm init
+
+npm install @angular/common @angular/core @angular/ compile --save
+
+npm install @angular/platform-browser @angular/platform-browser-dynamic --save
+
+npm install @angular/router @angular/router-deprecated --save
+
+npm install @angular/http --save
+
+npm install es6-shim reflect-metadata rxjs zone.js --save
+
+npm install bootstrap --save
+
+npm install -g typescript
+
+tsc --init --experimentalDecorators --emitDecoratorMetadata --target ES5 --module system --moduleResolution node
+
+npm install -g typings
+
+typings install dt~es6-shim --save --global

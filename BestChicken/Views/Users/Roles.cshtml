@@ -1,0 +1,24 @@
+﻿@model BestChicken.ViewModels.UserView
+@{
+    ViewBag.Title = "Roles";
+}
+
+<h2>Roles for user: @Html.DisplayFor(model => model.Name)</h2>
+<p>
+    @Html.ActionLink("Back to List", "Index", new {}, new { @class = "btn btn-info" })
+    @Html.ActionLink("Add Role", "AddRole", new { id = Model.UserId }, new { @class = "btn btn-primary" })
+</p>
+<table class="table">
+    @foreach (var item in Model.Roles)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "DeleteRol", new { id = Model.UserId })
+            </td>
+        </tr>
+    }
+
+</table>
